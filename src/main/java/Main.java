@@ -17,8 +17,15 @@ public class Main {
         DataMetaParser parser = new DataMetaParser();
         DataMeta dataMeta = parser.parse(INPUT_DATA_META_PATH, StandardCharsets.UTF_8);
 
-        EasyExcel.read(dataMeta.getWorkbookPath(), new ExcelListener(dataMeta)).excelType(ExcelTypeEnum.XLS)
-                .sheet(2)
-                .doRead();
+
+
+        for (String workbookPath : dataMeta.getWorkbookPaths()) {
+            EasyExcel.read(workbookPath, new ExcelListener(dataMeta))
+                    .excelType(ExcelTypeEnum.XLS)
+                    .sheet(2)
+                    .doRead();
+        }
+
+
     }
 }
