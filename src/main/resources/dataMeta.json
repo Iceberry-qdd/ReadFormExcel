@@ -1,0 +1,43 @@
+{
+  "sheetName": "3土地基本情况表",
+  "sheetNo": "2",
+  "workbookPath": [
+    "C:\\Users\\DELL\\Documents\\Idea projects\\DataScript\\input\\test.xls",
+    "C:\\Users\\DELL\\Documents\\Idea projects\\DataScript\\input\\test.xls"
+  ],
+  "outputPath": "C:/Users/DELL/Documents/Idea projects/DataScript/output/output.xlsx",
+  "dataSchemes": [
+    {
+      "coordinate": {
+        "title": "A2",
+        "content": "B2"
+      },
+      "type": "String",
+      "pattern": ":1"
+    },
+    {
+      "coordinate": {
+        "title": "E2",
+        "content": "F2"
+      },
+      "type": "String",
+      "pattern": ""
+    },
+    {
+      "coordinate": {
+        "title": "A3",
+        "content": "B3"
+      },
+      "type": "String",
+      "pattern": ""
+    },
+    {
+      "coordinate": {
+        "title": "E3",
+        "content": "G3"
+      },
+      "type": "String",
+      "pattern": ""
+    }
+  ]
+}
