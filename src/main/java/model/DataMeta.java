@@ -1,25 +1,59 @@
 package model;
 
-import java.util.List;
-
 public class DataMeta {
+    String workbookBatchRootPath;
+    String workbookBatchPathRegex;
     String[] workbookPaths;
     String outputPath;
     String sheetName;
     String sheetNo;
-    List<String> headLocs;
-    List<String> bodyLocs;
+    String[] headLocs;
+    String[] bodyLocs;
+    String[] bodyLocs2;
+    String headSeparator;
+    String bodySeparator;
 
     public DataMeta() {
     }
 
-    public DataMeta(String[] workbookPaths, String outputPath, String sheetName, String sheetNo, List<String> headLocs, List<String> bodyLocs) {
-        this.workbookPaths = workbookPaths;
-        this.outputPath = outputPath;
-        this.sheetName = sheetName;
-        this.sheetNo = sheetNo;
-        this.headLocs = headLocs;
-        this.bodyLocs = bodyLocs;
+    public String[] getBodyLocs2() {
+        return bodyLocs2;
+    }
+
+    public void setBodyLocs2(String[] bodyLocs2) {
+        this.bodyLocs2 = bodyLocs2;
+    }
+
+    public String getHeadSeparator() {
+        return headSeparator;
+    }
+
+    public void setHeadSeparator(String headSeparator) {
+        this.headSeparator = headSeparator;
+    }
+
+    public String getBodySeparator() {
+        return bodySeparator;
+    }
+
+    public void setBodySeparator(String bodySeparator) {
+        this.bodySeparator = bodySeparator;
+    }
+
+    public String getWorkbookBatchPathRegex() {
+        return workbookBatchPathRegex;
+    }
+
+    public String getWorkbookBatchRootPath() {
+        return workbookBatchRootPath;
+    }
+
+    public void setWorkbookBatchRootPath(String workbookBatchRootPath) {
+        this.workbookBatchRootPath = workbookBatchRootPath;
+    }
+
+    public void setWorkbookBatchPathRegex(String workbookBatchPathRegex) {
+        this.workbookBatchPathRegex = workbookBatchPathRegex;
     }
 
     public String[] getWorkbookPaths() {
@@ -54,21 +88,19 @@ public class DataMeta {
         this.sheetNo = sheetNo;
     }
 
-    public List<String> getHeadLocs() {
+    public String[] getHeadLocs() {
         return headLocs;
     }
 
-    public void setHeadLocs(List<String> headLocs) {
+    public void setHeadLocs(String[] headLocs) {
         this.headLocs = headLocs;
     }
 
-    public List<String> getBodyLocs() {
+    public String[] getBodyLocs() {
         return bodyLocs;
     }
 
-    public void setBodyLocs(List<String> bodyLocs) {
+    public void setBodyLocs(String[] bodyLocs) {
         this.bodyLocs = bodyLocs;
     }
-
-
 }

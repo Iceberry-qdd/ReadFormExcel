@@ -92,3 +92,5 @@ fabric.properties
 # Cache file creation bug
 # See https://youtrack.jetbrains.com/issue/JBR-2257
 .idea/$CACHE_FILE$
+/output/output.2022-07-21-17-11.log
+/src/main/resources/log4j.properties

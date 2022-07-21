@@ -4,6 +4,8 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.util.ListUtils;
 import model.DataMeta;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
+    public static final Logger logger = LoggerFactory.getLogger(ExcelListener.class);
     private final List<Map<Integer, String>> dataList;
     private DataMeta dataMeta;
 
@@ -44,7 +47,7 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
         saveAsExcel();
-        System.out.println("该Excel表处理完成！");
+        //logger.info("该Excel表处理完成！");
     }
 
     /**
@@ -54,18 +57,18 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
         List<List<String>> head = getTableHead(dataMeta);
         List<List<String>> body = getTableBody(dataMeta);
 
-        File file=new File(dataMeta.getOutputPath());
-        File tempFile=new File("temp.xlsx");
+        File file = new File(dataMeta.getOutputPath());
+        File tempFile = new File("temp.xlsx");
 
-        if (file.exists()){
-            System.out.println("文件已存在");
+        if (file.exists()) {
+            //logger.warn("输出文件已存在，将追加写");
             EasyExcel.write(file)
                     .needHead(false)
                     .withTemplate(file)
                     .file(tempFile)
                     .sheet(dataMeta.getSheetName())
                     .doWrite(body);
-        }else {
+        } else {
             EasyExcel.write(dataMeta.getOutputPath())
                     .excelType(ExcelTypeEnum.XLSX)
                     .head(head)
@@ -73,7 +76,7 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
                     .doWrite(body);
         }
 
-        if (tempFile.exists()){
+        if (tempFile.exists()) {
             file.delete();
             tempFile.renameTo(file);
         }
@@ -138,9 +141,25 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
     private List<List<String>> getTableBody(DataMeta dataMeta) {
         List<List<String>> list = ListUtils.newArrayList();
         List<String> body = new ArrayList<>();
+        String[] bodyLocs = dataMeta.getBodyLocs();
+        String[] bodyLocs2 = dataMeta.getBodyLocs2();
 
-        for (String bodyLoc : dataMeta.getBodyLocs()) {
-            String content = getCellContent(bodyLoc);
+        for (int i = 0; i < bodyLocs.length; i++) {
+            String content = getCellContent(bodyLocs[i]);
+
+            if (content == null) { // 若content为空，则从bodyLocs2中找content
+                content = getCellContent(bodyLocs2[i]);
+            }
+
+            if (content == null) {
+                body.add(content);
+                continue;
+            }
+
+            boolean isSeparate = content.contains(dataMeta.getBodySeparator()); // content是否包含分隔符
+            if (isSeparate) {
+                content = content.split(dataMeta.getBodySeparator()).length < 2 ? null : content.split(dataMeta.getBodySeparator())[1]; // 包含分隔符，则取第一个分隔符之后的内容作为content
+            }
             body.add(content);
         }
         list.add(body);
