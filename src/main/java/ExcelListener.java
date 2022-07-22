@@ -20,7 +20,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
-    public static final Logger logger = LoggerFactory.getLogger(ExcelListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExcelListener.class);
     private final List<Map<Integer, String>> dataList;
     private DataMeta dataMeta;
 
@@ -151,14 +151,14 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
                 content = getCellContent(bodyLocs2[i]);
             }
 
-            if (content == null) {
-                body.add(content);
+            if (content == null) { // 若bodyLocs2中也找不到，则content值赋为null
+                body.add(null);
                 continue;
             }
 
             boolean isSeparate = content.contains(dataMeta.getBodySeparator()); // content是否包含分隔符
             if (isSeparate) {
-                content = content.split(dataMeta.getBodySeparator()).length < 2 ? null : content.split(dataMeta.getBodySeparator())[1]; // 包含分隔符，则取第一个分隔符之后的内容作为content
+                content = content.split(dataMeta.getBodySeparator()).length < 2 ? null : content.split(dataMeta.getBodySeparator())[1]; // 包含分隔符，则取第一个分隔符之后的内容作为content，否则，content为null
             }
             body.add(content);
         }

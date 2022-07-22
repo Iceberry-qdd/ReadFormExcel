@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 /**
  * @author Iceberry
  * @date 2022/7/20
- * @desc
+ * @desc 配置文件编码器，仅支持Json格式
  * @since 1.0
  */
 public class DataMetaParser {

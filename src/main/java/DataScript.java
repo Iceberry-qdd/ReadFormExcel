@@ -15,28 +15,40 @@ import java.util.stream.Stream;
 
 /**
  * @author Iceberry
- * @date 2022/7/19
- * @desc 测试用easyExcel读取数据
- * @since 1.0
+ * @date 2022/7/22
+ * @desc 读写表单形式Excel文件主类
+ * @since 2.2
  */
-public class Main {
-    public static final Logger logger = LoggerFactory.getLogger(Main.class);
-    public static final String INPUT_DATA_META_PATH = "C:\\Users\\DELL\\Documents\\Idea projects\\DataScript\\src\\main\\resources\\dataMeta.json";
-    public static final int BATCH_SIZE = 2000;
+public class DataScript {
+    private static final Logger logger = LoggerFactory.getLogger(DataScript.class);
+    private static final long DEFAULT_BATCH_SIZE = 1;
 
-    public static void main(String[] args) {
+    /**
+     * 入口函数，根据传入的配置文件路径dataMetaPath处理Excel表格，遇到错误则立即停止作业
+     * 默认处理的文件数量为1
+     * @param dataMetaPath 配置文件路径
+     */
+    public static void deal(String dataMetaPath) {
+        deal(dataMetaPath,DEFAULT_BATCH_SIZE);
+    }
+
+    /**
+     * 入口函数，根据传入的配置文件路径dataMetaPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
+     * @param dataMetaPath 配置文件路径
+     * @param BATCH_SIZE 要处理的文件数量
+     */
+    public static void deal(String dataMetaPath,long BATCH_SIZE){
         DataMetaParser parser = new DataMetaParser();
-        DataMeta dataMeta = parser.parse(INPUT_DATA_META_PATH, StandardCharsets.UTF_8);
+        DataMeta dataMeta = parser.parse(dataMetaPath, StandardCharsets.UTF_8);
 
         String[] workbookPaths = getWorkbookPaths(dataMeta);
         deleteOutputFileIfExisted(dataMeta.getOutputPath());
 
-        int jobCount = 0;
+        long jobCount = 0L;
         for (String workbookPath : workbookPaths) {
             if (jobCount++ == BATCH_SIZE) break;
             logger.info("[job{}]正在处理工作表：{}", jobCount, workbookPath);
             EasyExcel.read(workbookPath, new ExcelListener(dataMeta))
-                    //.excelType(ExcelTypeEnum.XLS)
                     .sheet(2)
                     .doRead();
         }
@@ -77,8 +89,8 @@ public class Main {
             List<String> pathList = new ArrayList<>();
             paths.filter(p -> !Files.isDirectory(p))
                     .map(Path::toString)
-                    .filter(p -> p.endsWith(".xls") || p.endsWith(".xlsx")) //XXX 此处应使用p.matches()
-                    .filter(p -> !p.contains(batchPathRegex))
+                    .filter(p -> p.endsWith(".xls") || p.endsWith(".xlsx"))
+                    .filter(p -> !p.matches(batchPathRegex))
                     .forEach(pathList::add);
             workbookPaths = new String[pathList.size()];
             for (int i = 0; i < pathList.size(); i++) {
@@ -101,7 +113,6 @@ public class Main {
         File file = new File(outputFilePath);
         if (file.exists()) {
             logger.warn("输出文件{}已存在，在工作前需要删除", file.getAbsolutePath());
-
             boolean isDelete = file.delete();
             if (isDelete) {
                 logger.info("输出文件已删除，即将开始工作......");
