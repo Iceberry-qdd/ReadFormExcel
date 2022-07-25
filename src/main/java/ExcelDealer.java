@@ -1,5 +1,5 @@
 import com.alibaba.excel.EasyExcel;
-import model.DataMeta;
+import model.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +19,8 @@ import java.util.stream.Stream;
  * @desc 读写表单形式Excel文件主类
  * @since 2.2
  */
-public class DataScript {
-    private static final Logger logger = LoggerFactory.getLogger(DataScript.class);
+public class ExcelDealer {
+    private static final Logger logger = LoggerFactory.getLogger(ExcelDealer.class);
     private static final long DEFAULT_BATCH_SIZE = 1;
 
     /**
@@ -38,17 +38,17 @@ public class DataScript {
      * @param BATCH_SIZE 要处理的文件数量
      */
     public static void deal(String dataMetaPath,long BATCH_SIZE){
-        DataMetaParser parser = new DataMetaParser();
-        DataMeta dataMeta = parser.parse(dataMetaPath, StandardCharsets.UTF_8);
+        ConfigurationParser parser = new ConfigurationParser();
+        Configuration config = parser.parse(dataMetaPath, StandardCharsets.UTF_8);
 
-        String[] workbookPaths = getWorkbookPaths(dataMeta);
-        deleteOutputFileIfExisted(dataMeta.getOutputPath());
+        String[] workbookPaths = getWorkbookPaths(config);
+        deleteOutputFileIfExisted(config.getOutputPath());
 
         long jobCount = 0L;
         for (String workbookPath : workbookPaths) {
             if (jobCount++ == BATCH_SIZE) break;
             logger.info("[job{}]正在处理工作表：{}", jobCount, workbookPath);
-            EasyExcel.read(workbookPath, new ExcelListener(dataMeta))
+            EasyExcel.read(workbookPath, new ExcelListener(config))
                     .sheet(2)
                     .doRead();
         }
@@ -60,17 +60,17 @@ public class DataScript {
      * 若规定了Excel工作表路径的batchRootPath属性，则按照正则表达式内容获取Excel文件列表，并赋给workbookPaths对象；
      * 若没有规定，则从dataMeta对象的getWorkbookPaths()方法获取。
      *
-     * @param dataMeta dataMeta文件
+     * @param config dataMeta文件
      * @return workbook路径数组
      */
-    private static String[] getWorkbookPaths(DataMeta dataMeta) {
+    private static String[] getWorkbookPaths(Configuration config) {
         String[] workbookPaths;
-        if (dataMeta.getWorkbookBatchRootPath() == null) {
-            workbookPaths = dataMeta.getWorkbookPaths();
+        if (config.getWorkbookBatchRootPath() == null) {
+            workbookPaths = config.getWorkbookPaths();
         } else {
             logger.info("开始批量读取workbook路径...");
-            String batchRootPath = dataMeta.getWorkbookBatchRootPath();
-            String batchPathRegex = dataMeta.getWorkbookBatchPathRegex();
+            String batchRootPath = config.getWorkbookBatchRootPath();
+            String batchPathRegex = config.getWorkbookBatchPathRegex();
             workbookPaths = getWorkbookPaths(batchRootPath, batchPathRegex);
         }
         return workbookPaths;

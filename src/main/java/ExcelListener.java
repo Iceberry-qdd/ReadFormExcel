@@ -3,7 +3,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.util.ListUtils;
-import model.DataMeta;
+import model.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,19 +19,19 @@ import java.util.Map;
  * @desc 测试用easyExcel读取数据的监听器
  * @since 1.0
  */
-public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
+class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
     private static final Logger logger = LoggerFactory.getLogger(ExcelListener.class);
     private final List<Map<Integer, String>> dataList;
-    private DataMeta dataMeta;
+    private Configuration config;
 
 
-    public ExcelListener() {
+    protected ExcelListener() {
         this.dataList = new ArrayList<>();
     }
 
-    public ExcelListener(DataMeta dataMeta) {
+    protected ExcelListener(Configuration config) {
         this.dataList = new ArrayList<>();
-        this.dataMeta = dataMeta;
+        this.config = config;
     }
 
     @Override
@@ -53,11 +53,11 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
     /**
      * 将数据写入Excel中，若文件存在，则追加；否则新建文件
      */
-    public void saveAsExcel() {
-        List<List<String>> head = getTableHead(dataMeta);
-        List<List<String>> body = getTableBody(dataMeta);
+    protected void saveAsExcel() {
+        List<List<String>> head = getTableHead(config);
+        List<List<String>> body = getTableBody(config);
 
-        File file = new File(dataMeta.getOutputPath());
+        File file = new File(config.getOutputPath());
         File tempFile = new File("temp.xlsx");
 
         if (file.exists()) {
@@ -66,13 +66,13 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
                     .needHead(false)
                     .withTemplate(file)
                     .file(tempFile)
-                    .sheet(dataMeta.getSheetName())
+                    .sheet(config.getSheetName())
                     .doWrite(body);
         } else {
-            EasyExcel.write(dataMeta.getOutputPath())
+            EasyExcel.write(config.getOutputPath())
                     .excelType(ExcelTypeEnum.XLSX)
                     .head(head)
-                    .sheet(dataMeta.getSheetName())
+                    .sheet(config.getSheetName())
                     .doWrite(body);
         }
 
@@ -89,7 +89,7 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
      * @param rowIndex 行号
      * @return 该单元格的内容
      */
-    public String getCellContent(int colIndex, int rowIndex) {
+    protected String getCellContent(int colIndex, int rowIndex) {
         return dataList.get(rowIndex).get(colIndex);
     }
 
@@ -99,7 +99,7 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
      * @param coordinate 单元格坐标，列需使用大写字母表示
      * @return 该单元格的内容
      */
-    public String getCellContent(String coordinate) {
+    protected String getCellContent(String coordinate) {
         int colIndex = 0, rowIndex = 0;
         rowIndex = Integer.parseInt(coordinate.replaceAll("[A-Z]+", "")) - 1;
         String colStr = coordinate.replaceAll("\\d", "");
@@ -118,13 +118,13 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
     /**
      * 从dataMeta中获取表头
      *
-     * @param dataMeta 元数据
+     * @param config 元数据
      * @return 表头列表
      */
-    private List<List<String>> getTableHead(DataMeta dataMeta) {
+    protected List<List<String>> getTableHead(Configuration config) {
         List<List<String>> list = ListUtils.newArrayList();
 
-        for (String headLoc : dataMeta.getHeadLocs()) {
+        for (String headLoc : config.getHeadLocs()) {
             String headString = getCellContent(headLoc);
             List<String> head = new ArrayList<>(Collections.singleton(headString));
             list.add(head);
@@ -135,14 +135,14 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
     /**
      * 从dataMeta中获取表内容
      *
-     * @param dataMeta 元数据
+     * @param config 元数据
      * @return 表内容列表
      */
-    private List<List<String>> getTableBody(DataMeta dataMeta) {
+    protected List<List<String>> getTableBody(Configuration config) {
         List<List<String>> list = ListUtils.newArrayList();
         List<String> body = new ArrayList<>();
-        String[] bodyLocs = dataMeta.getBodyLocs();
-        String[] bodyLocs2 = dataMeta.getBodyLocs2();
+        String[] bodyLocs = config.getBodyLocs();
+        String[] bodyLocs2 = config.getBodyLocs2();
 
         for (int i = 0; i < bodyLocs.length; i++) {
             String content = getCellContent(bodyLocs[i]);
@@ -156,9 +156,9 @@ public class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
                 continue;
             }
 
-            boolean isSeparate = content.contains(dataMeta.getBodySeparator()); // content是否包含分隔符
+            boolean isSeparate = content.contains(config.getBodySeparator()); // content是否包含分隔符
             if (isSeparate) {
-                content = content.split(dataMeta.getBodySeparator()).length < 2 ? null : content.split(dataMeta.getBodySeparator())[1]; // 包含分隔符，则取第一个分隔符之后的内容作为content，否则，content为null
+                content = content.split(config.getBodySeparator()).length < 2 ? null : content.split(config.getBodySeparator())[1]; // 包含分隔符，则取第一个分隔符之后的内容作为content，否则，content为null
             }
             body.add(content);
         }

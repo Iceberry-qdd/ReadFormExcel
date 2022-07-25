@@ -1,5 +1,5 @@
 import com.google.gson.Gson;
-import model.DataMeta;
+import model.Configuration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,18 +13,18 @@ import java.nio.file.Paths;
  * @desc 配置文件编码器，仅支持Json格式
  * @since 1.0
  */
-public class DataMetaParser {
+class ConfigurationParser {
     private final Gson gson;
 
-    public DataMetaParser() {
+    protected ConfigurationParser() {
         this.gson = new Gson();
     }
 
-    public DataMeta parse(String jsonStr) {
-        return gson.fromJson(jsonStr, DataMeta.class);
+    protected Configuration parse(String jsonStr) {
+        return gson.fromJson(jsonStr, Configuration.class);
     }
 
-    public DataMeta parse(String filePath, Charset charset) {
+    protected Configuration parse(String filePath, Charset charset) {
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(filePath), charset)) {
             String lineStr;
             StringBuilder sb = new StringBuilder();
@@ -35,6 +35,6 @@ public class DataMetaParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new DataMeta();
+        return new Configuration();
     }
 }

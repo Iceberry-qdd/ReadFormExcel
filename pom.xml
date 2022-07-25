@@ -47,4 +47,12 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>write-read-package</id>
+            <name>GitHub iceberry-qdd Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/iceberry-qdd/ReadFormExcel</url>
+        </repository>
+    </distributionManagement>
+
 </project>
