@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.iceberry</groupId>
     <artifactId>DataScript</artifactId>
-    <version>2.2</version>
+    <version>2.2.1</version>
     <name>dataScript</name>
     <description>dataScript is a form based excel handle tools written in Java</description>
     <url>https://github.com/Iceberry-qdd/ReadFormExcel</url>
@@ -27,6 +27,8 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>
@@ -50,8 +52,8 @@
     <distributionManagement>
         <repository>
             <id>write-read-package</id>
-            <name>GitHub iceberry-qdd Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/iceberry-qdd/ReadFormExcel</url>
+            <name>GitHub Iceberry-qdd Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Iceberry-qdd/ReadFormExcel</url>
         </repository>
     </distributionManagement>
 

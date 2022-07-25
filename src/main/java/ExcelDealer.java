@@ -38,8 +38,7 @@ public class ExcelDealer {
      * @param BATCH_SIZE 要处理的文件数量
      */
     public static void deal(String dataMetaPath,long BATCH_SIZE){
-        ConfigurationParser parser = new ConfigurationParser();
-        Configuration config = parser.parse(dataMetaPath, StandardCharsets.UTF_8);
+        Configuration config = ConfigurationParser.parse(dataMetaPath, StandardCharsets.UTF_8);
 
         String[] workbookPaths = getWorkbookPaths(config);
         deleteOutputFileIfExisted(config.getOutputPath());

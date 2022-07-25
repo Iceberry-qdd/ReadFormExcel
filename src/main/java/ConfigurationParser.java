@@ -14,17 +14,17 @@ import java.nio.file.Paths;
  * @since 1.0
  */
 class ConfigurationParser {
-    private final Gson gson;
+    private static final Gson gson=new Gson();
 
-    protected ConfigurationParser() {
-        this.gson = new Gson();
-    }
+//    protected ConfigurationParser() {
+//        this.gson = new Gson();
+//    }
 
-    protected Configuration parse(String jsonStr) {
+    protected static Configuration parse(String jsonStr) {
         return gson.fromJson(jsonStr, Configuration.class);
     }
 
-    protected Configuration parse(String filePath, Charset charset) {
+    protected static Configuration parse(String filePath, Charset charset) {
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(filePath), charset)) {
             String lineStr;
             StringBuilder sb = new StringBuilder();
