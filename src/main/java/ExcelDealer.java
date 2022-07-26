@@ -1,4 +1,5 @@
 import com.alibaba.excel.EasyExcel;
+import exception.NullSheetException;
 import model.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,16 @@ public class ExcelDealer {
         for (String workbookPath : workbookPaths) {
             if (jobCount++ == BATCH_SIZE) break;
             logger.info("[job{}]正在处理工作表：{}", jobCount, workbookPath);
-            EasyExcel.read(workbookPath, new ExcelListener(config))
-                    .sheet(2)
-                    .doRead();
+
+            if (config.getSheetName()==null) {
+                EasyExcel.read(workbookPath, new ExcelListener(config))
+                        .sheet(config.getSheetNo())
+                        .doRead();
+            }else{
+                EasyExcel.read(workbookPath, new ExcelListener(config))
+                        .sheet(config.getSheetName())
+                        .doRead();
+            }
         }
         logger.info("所有表均处理完毕");
     }
