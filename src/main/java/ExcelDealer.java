@@ -58,9 +58,9 @@ public class ExcelDealer {
 
         deleteOutputFileIfExisted(config.getOutputPath());
 
-        for (long i = offset, jobCount = 0L; i < workbookPaths.length && jobCount < BATCH_SIZE; i++,jobCount++) {
+        for (long i = offset, jobCount = 0L; i < workbookPaths.length && jobCount < BATCH_SIZE; i++, jobCount++) {
             for (String workbookPath : workbookPaths) {
-                logger.info("[job{}]正在处理工作表：{}", jobCount, workbookPath);
+                logger.info("[job{}]正在处理工作表：{}", jobCount + 1, workbookPath);
 
                 EasyExcel.read(workbookPath, new ExcelListener(config))
                         .sheet(config.getSheetNo())

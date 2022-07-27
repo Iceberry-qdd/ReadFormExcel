@@ -26,7 +26,7 @@ public class Configuration {
     /**
      * 要处理的sheet编号
      */
-    private String sheetNo;
+    private Integer sheetNo;
     /**
      * 手动指定的标题所在单元格，按字符串数组提供
      */
@@ -71,11 +71,11 @@ public class Configuration {
         this.outputPath = outputPath;
     }
 
-    public String getSheetNo() {
+    public Integer getSheetNo() {
         return sheetNo;
     }
 
-    public void setSheetNo(String sheetNo) {
+    public void setSheetNo(Integer sheetNo) {
         this.sheetNo = sheetNo;
     }
 
