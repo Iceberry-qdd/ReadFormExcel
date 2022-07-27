@@ -6,7 +6,7 @@ package exception;
  * @desc
  * @since 1.0
  */
-public class NullSheetException extends RuntimeException{
+public class NullSheetException extends RuntimeException {
     public NullSheetException(String message) {
         super(message);
     }

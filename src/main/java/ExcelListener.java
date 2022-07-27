@@ -66,13 +66,13 @@ class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
                     .needHead(false)
                     .withTemplate(file)
                     .file(tempFile)
-                    .sheet(config.getSheetName())
+                    .sheet(config.getSheetNo())
                     .doWrite(body);
         } else {
             EasyExcel.write(config.getOutputPath())
                     .excelType(ExcelTypeEnum.XLSX)
                     .head(head)
-                    .sheet(config.getSheetName())
+                    .sheet(config.getSheetNo())
                     .doWrite(body);
         }
 
@@ -142,24 +142,9 @@ class ExcelListener extends AnalysisEventListener<Map<Integer, String>> {
         List<List<String>> list = ListUtils.newArrayList();
         List<String> body = new ArrayList<>();
         String[] bodyLocs = config.getBodyLocs();
-        String[] bodyLocs2 = config.getBodyLocs2();
 
         for (int i = 0; i < bodyLocs.length; i++) {
             String content = getCellContent(bodyLocs[i]);
-
-            if (content == null) { // 若content为空，则从bodyLocs2中找content
-                content = getCellContent(bodyLocs2[i]);
-            }
-
-            if (content == null) { // 若bodyLocs2中也找不到，则content值赋为null
-                body.add(null);
-                continue;
-            }
-
-            boolean isSeparate = content.contains(config.getBodySeparator()); // content是否包含分隔符
-            if (isSeparate) {
-                content = content.split(config.getBodySeparator()).length < 2 ? null : content.split(config.getBodySeparator())[1]; // 包含分隔符，则取第一个分隔符之后的内容作为content，否则，content为null
-            }
             body.add(content);
         }
         list.add(body);

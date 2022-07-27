@@ -6,7 +6,7 @@ package exception;
  * @desc
  * @since 1.0
  */
-public class NullOutputPathException extends RuntimeException{
+public class NullOutputPathException extends RuntimeException {
     public NullOutputPathException(String message) {
         super(message);
     }

@@ -6,7 +6,7 @@ package exception;
  * @desc
  * @since 1.0
  */
-public class NotDirectoryException extends RuntimeException{
+public class NotDirectoryException extends RuntimeException {
     public NotDirectoryException(String message) {
         super(message);
     }

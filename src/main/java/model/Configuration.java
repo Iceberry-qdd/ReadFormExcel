@@ -24,10 +24,6 @@ public class Configuration {
      */
     private String outputPath;
     /**
-     * 要处理的sheet名称（若有自定义）
-     */
-    private String sheetName;
-    /**
      * 要处理的sheet编号
      */
     private String sheetNo;
@@ -39,48 +35,8 @@ public class Configuration {
      * 手动指定的内容所在单元格，按字符串数组提供，需与位置对应
      */
     private String[] bodyLocs;
-    /**
-     * 手动指定的内容所在单元格备用，按字符串数组提供，需与位置对应，若查询时bodyLocs给出的单元格内容为空，则尝试在本数组中查询
-     */
-    private String[] bodyLocs2;
-    /**
-     * 标题需要分割的分隔符，取分隔后第一个分隔符前内容作为标题，若不指定或找不到该分隔符，则不进行分割
-     */
-    private String headSeparator;
-    /**
-     * 内容需要分割的分隔符，取分隔后第一个分隔符后内容作为标题，若不指定或找不到该分隔符，则不进行分割
-     */
-    private String bodySeparator;
 
     public Configuration() {
-    }
-
-    public String[] getBodyLocs2() {
-        return bodyLocs2;
-    }
-
-    public void setBodyLocs2(String[] bodyLocs2) {
-        this.bodyLocs2 = bodyLocs2;
-    }
-
-    public String getHeadSeparator() {
-        return headSeparator;
-    }
-
-    public void setHeadSeparator(String headSeparator) {
-        this.headSeparator = headSeparator;
-    }
-
-    public String getBodySeparator() {
-        return bodySeparator;
-    }
-
-    public void setBodySeparator(String bodySeparator) {
-        this.bodySeparator = bodySeparator;
-    }
-
-    public String getWorkbookBatchPathRegex() {
-        return workbookBatchPathRegex;
     }
 
     public String getWorkbookBatchRootPath() {
@@ -89,6 +45,10 @@ public class Configuration {
 
     public void setWorkbookBatchRootPath(String workbookBatchRootPath) {
         this.workbookBatchRootPath = workbookBatchRootPath;
+    }
+
+    public String getWorkbookBatchPathRegex() {
+        return workbookBatchPathRegex;
     }
 
     public void setWorkbookBatchPathRegex(String workbookBatchPathRegex) {
@@ -109,14 +69,6 @@ public class Configuration {
 
     public void setOutputPath(String outputPath) {
         this.outputPath = outputPath;
-    }
-
-    public String getSheetName() {
-        return sheetName;
-    }
-
-    public void setSheetName(String sheetName) {
-        this.sheetName = sheetName;
     }
 
     public String getSheetNo() {

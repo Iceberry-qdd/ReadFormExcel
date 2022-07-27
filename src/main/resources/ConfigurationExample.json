@@ -1,12 +1,9 @@
 {
-  "sheetName": "3土地基本情况表",
   "sheetNo": "2",
   "workbookBatchRootPath": "C:\\Users\\DELL\\Documents\\Project\\系统资料\\清册",
   "workbookBatchPathRegex": "(.*汇总.*)|(.*发进场总面积与收口面积\\.xlsx)",
   "workbookPaths": [],
   "outputPath": "C:/Users/DELL/Documents/Idea projects/DataScript/output/output.xlsx",
   "headLocs": ["A2","E2","A3","E3","A4","E4","A5","E5","A6","E6","A7","D7","G7","A8","D8","G8","A9"],
-  "bodyLocs": ["B2","F2","B3","G3","B4","G4","B5","G5","B6","G6","C7","E7","H7","C8","E8","H8","C9"],
-  "bodyLocs2": ["A2","F2","B3","G3","B4","G4","B5","G5","B6","G6","C7","E7","H7","C8","E8","H8","C9"],
-  "bodySeparator": "："
+  "bodyLocs": ["B2","F2","B3","G3","B4","G4","B5","G5","B6","G6","C7","E7","H7","C8","E8","H8","C9"]
 }

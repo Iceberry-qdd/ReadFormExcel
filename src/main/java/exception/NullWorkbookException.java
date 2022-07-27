@@ -6,7 +6,7 @@ package exception;
  * @desc
  * @since 1.0
  */
-public class NullWorkbookException extends RuntimeException{
+public class NullWorkbookException extends RuntimeException {
     public NullWorkbookException(String message) {
         super(message);
     }

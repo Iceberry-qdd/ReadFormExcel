@@ -1,5 +1,4 @@
 import com.alibaba.excel.EasyExcel;
-import exception.NullSheetException;
 import model.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,18 +26,20 @@ public class ExcelDealer {
     /**
      * 入口函数，根据传入的配置文件路径dataMetaPath处理Excel表格，遇到错误则立即停止作业
      * 默认处理的文件数量为1
+     *
      * @param dataMetaPath 配置文件路径
      */
     public static void deal(String dataMetaPath) {
-        deal(dataMetaPath,DEFAULT_BATCH_SIZE);
+        deal(dataMetaPath, DEFAULT_BATCH_SIZE);
     }
 
     /**
      * 入口函数，根据传入的配置文件路径dataMetaPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
+     *
      * @param dataMetaPath 配置文件路径
-     * @param BATCH_SIZE 要处理的文件数量
+     * @param BATCH_SIZE   要处理的文件数量
      */
-    public static void deal(String dataMetaPath,long BATCH_SIZE){
+    public static void deal(String dataMetaPath, long BATCH_SIZE) {
         Configuration config = ConfigurationParser.parse(dataMetaPath, StandardCharsets.UTF_8);
 
         String[] workbookPaths = getWorkbookPaths(config);
@@ -51,15 +52,9 @@ public class ExcelDealer {
             if (jobCount++ == BATCH_SIZE) break;
             logger.info("[job{}]正在处理工作表：{}", jobCount, workbookPath);
 
-            if (config.getSheetName()==null) {
-                EasyExcel.read(workbookPath, new ExcelListener(config))
-                        .sheet(config.getSheetNo())
-                        .doRead();
-            }else{
-                EasyExcel.read(workbookPath, new ExcelListener(config))
-                        .sheet(config.getSheetName())
-                        .doRead();
-            }
+            EasyExcel.read(workbookPath, new ExcelListener(config))
+                    .sheet(config.getSheetNo())
+                    .doRead();
         }
         logger.info("所有表均处理完毕");
     }
@@ -74,7 +69,7 @@ public class ExcelDealer {
      */
     private static String[] getWorkbookPaths(Configuration config) {
         String[] workbookPaths;
-        if (config.getWorkbookPaths()==null || config.getWorkbookPaths().length==0) {
+        if (config.getWorkbookPaths() == null || config.getWorkbookPaths().length == 0) {
             logger.info("开始批量读取workbook路径...");
             String batchRootPath = config.getWorkbookBatchRootPath();
             String batchPathRegex = config.getWorkbookBatchPathRegex();
