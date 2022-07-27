@@ -42,6 +42,8 @@ public class ExcelDealer {
         Configuration config = ConfigurationParser.parse(dataMetaPath, StandardCharsets.UTF_8);
 
         String[] workbookPaths = getWorkbookPaths(config);
+        config.setWorkbookPaths(workbookPaths);
+
         deleteOutputFileIfExisted(config.getOutputPath());
 
         long jobCount = 0L;
@@ -72,13 +74,13 @@ public class ExcelDealer {
      */
     private static String[] getWorkbookPaths(Configuration config) {
         String[] workbookPaths;
-        if (config.getWorkbookBatchRootPath() == null) {
-            workbookPaths = config.getWorkbookPaths();
-        } else {
+        if (config.getWorkbookPaths()==null || config.getWorkbookPaths().length==0) {
             logger.info("开始批量读取workbook路径...");
             String batchRootPath = config.getWorkbookBatchRootPath();
             String batchPathRegex = config.getWorkbookBatchPathRegex();
             workbookPaths = getWorkbookPaths(batchRootPath, batchPathRegex);
+        } else {
+            workbookPaths = config.getWorkbookPaths();
         }
         return workbookPaths;
     }
