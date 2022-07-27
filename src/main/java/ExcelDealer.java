@@ -24,38 +24,50 @@ public class ExcelDealer {
     private static final long DEFAULT_BATCH_SIZE = 1;
 
     /**
-     * 入口函数，根据传入的配置文件路径dataMetaPath处理Excel表格，遇到错误则立即停止作业
+     * 入口函数，根据传入的配置文件路径configurationPath处理Excel表格，遇到错误则立即停止作业
      * 默认处理的文件数量为1
      *
-     * @param dataMetaPath 配置文件路径
+     * @param configurationPath 配置文件路径
      */
-    public static void deal(String dataMetaPath) {
-        deal(dataMetaPath, DEFAULT_BATCH_SIZE);
+    public static void deal(String configurationPath) {
+        deal(configurationPath, DEFAULT_BATCH_SIZE);
     }
 
     /**
-     * 入口函数，根据传入的配置文件路径dataMetaPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
+     * 入口函数，根据传入的配置文件路径configurationPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
      *
-     * @param dataMetaPath 配置文件路径
-     * @param BATCH_SIZE   要处理的文件数量
+     * @param configurationPath 配置文件路径
+     * @param BATCH_SIZE        要处理的文件数量
      */
-    public static void deal(String dataMetaPath, long BATCH_SIZE) {
-        Configuration config = ConfigurationParser.parse(dataMetaPath, StandardCharsets.UTF_8);
+    public static void deal(String configurationPath, long BATCH_SIZE) {
+        deal(configurationPath, BATCH_SIZE, 0);
+    }
+
+    /**
+     * 入口函数，根据传入的配置文件路径configurationPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
+     *
+     * @param configurationPath 配置文件路径
+     * @param BATCH_SIZE        要处理的文件数量
+     * @param offset            起始处理文件的偏移量
+     */
+    public static void deal(String configurationPath, long BATCH_SIZE, long offset) {
+        Configuration config = ConfigurationParser.parse(configurationPath, StandardCharsets.UTF_8);
 
         String[] workbookPaths = getWorkbookPaths(config);
         config.setWorkbookPaths(workbookPaths);
 
         deleteOutputFileIfExisted(config.getOutputPath());
 
-        long jobCount = 0L;
-        for (String workbookPath : workbookPaths) {
-            if (jobCount++ == BATCH_SIZE) break;
-            logger.info("[job{}]正在处理工作表：{}", jobCount, workbookPath);
+        for (long i = offset, jobCount = 0L; i < workbookPaths.length && jobCount < BATCH_SIZE; i++,jobCount++) {
+            for (String workbookPath : workbookPaths) {
+                logger.info("[job{}]正在处理工作表：{}", jobCount, workbookPath);
 
-            EasyExcel.read(workbookPath, new ExcelListener(config))
-                    .sheet(config.getSheetNo())
-                    .doRead();
+                EasyExcel.read(workbookPath, new ExcelListener(config))
+                        .sheet(config.getSheetNo())
+                        .doRead();
+            }
         }
+
         logger.info("所有表均处理完毕");
     }
 
@@ -121,7 +133,7 @@ public class ExcelDealer {
             if (isDelete) {
                 logger.info("输出文件已删除，即将开始工作......");
             } else {
-                logger.error("无法删除输出文件！系统即将退出......");
+                logger.error("无法删除输出文件，可能是文件处于打开状态，请尝试关闭文件再次尝试！系统即将退出......");
                 System.exit(0);
             }
         }

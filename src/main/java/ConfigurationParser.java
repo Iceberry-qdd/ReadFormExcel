@@ -1,5 +1,7 @@
 import com.google.gson.Gson;
 import model.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.nio.file.Paths;
  */
 class ConfigurationParser {
     private static final Gson gson = new Gson();
+    private static final Logger logger= LoggerFactory.getLogger(ConfigurationParser.class);
 
     /**
      * 默认的编码格式为UTF-8
@@ -49,6 +52,7 @@ class ConfigurationParser {
             }
             config = gson.fromJson(sb.toString(), Configuration.class);
         } catch (IOException e) {
+            logger.error("在指定路径没有发现配置文件：{}",filePath);
             e.printStackTrace();
         }
         return config;
