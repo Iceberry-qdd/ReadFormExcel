@@ -19,9 +19,20 @@ import java.util.stream.Stream;
  * @desc 读写表单形式Excel文件主类
  * @since 2.2
  */
+
+/**
+ * 处理模式，覆盖或追加
+ */
+class ExcelDealMode{
+    public static final int COVER = 1;
+    public static final int APPEND = 2;
+}
+
 public class ExcelDealer {
     private static final Logger logger = LoggerFactory.getLogger(ExcelDealer.class);
-    private static final long DEFAULT_BATCH_SIZE = 1;
+    private static final int DEFAULT_DEAL_FILE_COUNT = 1;
+
+    private static final int DEFAULT_DEAL_MODE=ExcelDealMode.COVER;
 
     /**
      * 入口函数，根据传入的配置文件路径configurationPath处理Excel表格，遇到错误则立即停止作业
@@ -30,44 +41,52 @@ public class ExcelDealer {
      * @param configurationPath 配置文件路径
      */
     public static void deal(String configurationPath) {
-        deal(configurationPath, DEFAULT_BATCH_SIZE);
+        deal(configurationPath, DEFAULT_DEAL_FILE_COUNT);
     }
 
     /**
      * 入口函数，根据传入的配置文件路径configurationPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
      *
      * @param configurationPath 配置文件路径
-     * @param BATCH_SIZE        要处理的文件数量
+     * @param dealFileCount        要处理的文件数量
      */
-    public static void deal(String configurationPath, long BATCH_SIZE) {
-        deal(configurationPath, BATCH_SIZE, 0);
+    public static void deal(String configurationPath, int dealFileCount) {
+        deal(configurationPath, dealFileCount, 0);
     }
 
     /**
-     * 入口函数，根据传入的配置文件路径configurationPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
+     * 入口函数，根据传入的配置文件路径configurationPath、处理数量dealFileCount和处理偏移offset处理Excel表格，遇到错误则立即停止作业
      *
      * @param configurationPath 配置文件路径
-     * @param BATCH_SIZE        要处理的文件数量
+     * @param dealFileCount        要处理的文件数量
      * @param offset            起始处理文件的偏移量
      */
-    public static void deal(String configurationPath, long BATCH_SIZE, long offset) {
-        Configuration config = ConfigurationParser.parse(configurationPath, StandardCharsets.UTF_8);
+    public static void deal(String configurationPath, int dealFileCount, int offset) {
+        deal(configurationPath, dealFileCount, offset,DEFAULT_DEAL_MODE);
+    }
 
+    /**
+     * 入口函数，根据传入的配置文件路径configurationPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
+     * @param configurationPath
+     * @param dealFileCount
+     * @param offset
+     * @param mode
+     */
+    public static void deal(String configurationPath, int dealFileCount, int offset,int mode) {
+        Configuration config = ConfigurationParser.parse(configurationPath, StandardCharsets.UTF_8);
         String[] workbookPaths = getWorkbookPaths(config);
         config.setWorkbookPaths(workbookPaths);
 
-        deleteOutputFileIfExisted(config.getOutputPath());
-
-        for (long i = offset, jobCount = 0L; i < workbookPaths.length && jobCount < BATCH_SIZE; i++, jobCount++) {
-            for (String workbookPath : workbookPaths) {
-                logger.info("[job{}]正在处理工作表：{}", jobCount + 1, workbookPath);
-
-                EasyExcel.read(workbookPath, new ExcelListener(config))
-                        .sheet(config.getSheetNo())
-                        .doRead();
-            }
+        if (mode==ExcelDealMode.COVER){
+            deleteOutputFileIfExisted(config.getOutputPath());
         }
 
+        for (int i = offset, jobCount = 0; i < workbookPaths.length && jobCount < dealFileCount; i++, jobCount++) {
+            logger.info("[job{}]正在处理工作表：{}", jobCount + 1, workbookPaths[i]);
+            EasyExcel.read(workbookPaths[i], new ExcelListener(config))
+                    .sheet(config.getSheetNo())
+                    .doRead();
+        }
         logger.info("所有表均处理完毕");
     }
 
@@ -134,7 +153,7 @@ public class ExcelDealer {
                 logger.info("输出文件已删除，即将开始工作......");
             } else {
                 logger.error("无法删除输出文件，可能是文件处于打开状态，请尝试关闭文件再次尝试！系统即将退出......");
-                System.exit(0);
+                System.exit(1);
             }
         }
     }
