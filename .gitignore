@@ -94,3 +94,4 @@ fabric.properties
 .idea/$CACHE_FILE$
 /src/main/resources/log4j.properties
 /output/
+/src/main/java/Main.java

@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * 处理模式，覆盖或追加
  */
-class ExcelDealMode{
+class ExcelDealMode {
     public static final int COVER = 1;
     public static final int APPEND = 2;
 }
@@ -32,7 +32,7 @@ public class ExcelDealer {
     private static final Logger logger = LoggerFactory.getLogger(ExcelDealer.class);
     private static final int DEFAULT_DEAL_FILE_COUNT = 1;
 
-    private static final int DEFAULT_DEAL_MODE=ExcelDealMode.COVER;
+    private static final int DEFAULT_DEAL_MODE = ExcelDealMode.COVER;
 
     /**
      * 入口函数，根据传入的配置文件路径configurationPath处理Excel表格，遇到错误则立即停止作业
@@ -48,7 +48,7 @@ public class ExcelDealer {
      * 入口函数，根据传入的配置文件路径configurationPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
      *
      * @param configurationPath 配置文件路径
-     * @param dealFileCount        要处理的文件数量
+     * @param dealFileCount     要处理的文件数量
      */
     public static void deal(String configurationPath, int dealFileCount) {
         deal(configurationPath, dealFileCount, 0);
@@ -58,26 +58,27 @@ public class ExcelDealer {
      * 入口函数，根据传入的配置文件路径configurationPath、处理数量dealFileCount和处理偏移offset处理Excel表格，遇到错误则立即停止作业
      *
      * @param configurationPath 配置文件路径
-     * @param dealFileCount        要处理的文件数量
+     * @param dealFileCount     要处理的文件数量
      * @param offset            起始处理文件的偏移量
      */
     public static void deal(String configurationPath, int dealFileCount, int offset) {
-        deal(configurationPath, dealFileCount, offset,DEFAULT_DEAL_MODE);
+        deal(configurationPath, dealFileCount, offset, DEFAULT_DEAL_MODE);
     }
 
     /**
-     * 入口函数，根据传入的配置文件路径configurationPath和处理数量BATCH_SIZE处理Excel表格，遇到错误则立即停止作业
-     * @param configurationPath
-     * @param dealFileCount
-     * @param offset
-     * @param mode
+     * 入口函数，根据传入的配置文件路径configurationPath、处理数量BATCH_SIZE、处理偏移offset和处理模式处理Excel表格，遇到错误则立即停止作业
+     *
+     * @param configurationPath 配置文件路径
+     * @param dealFileCount     要处理的文件数量
+     * @param offset            起始处理文件的偏移量
+     * @param mode              输出文件写入模式，追加或覆盖
      */
-    public static void deal(String configurationPath, int dealFileCount, int offset,int mode) {
+    public static void deal(String configurationPath, int dealFileCount, int offset, int mode) {
         Configuration config = ConfigurationParser.parse(configurationPath, StandardCharsets.UTF_8);
         String[] workbookPaths = getWorkbookPaths(config);
         config.setWorkbookPaths(workbookPaths);
 
-        if (mode==ExcelDealMode.COVER){
+        if (mode == ExcelDealMode.COVER) {
             deleteOutputFileIfExisted(config.getOutputPath());
         }
 

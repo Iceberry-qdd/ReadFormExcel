@@ -49,8 +49,7 @@
 
 #### 2. 定义配置文件
 
-一个示例如下：
-
+一个示例如下： config.json
 ```json
 {
   "sheetNo": 0,
@@ -70,17 +69,19 @@
 ```java
 public class Main {
     // 配置文件的绝对路径
-    public static final String CONFIG_PATH = "c:/ConfigurationExample.json";
-    
+    public static final String CONFIG_PATH = "c:/Config.json";
+
     // 处理时忽略前OFFSET个文件
     public static final int OFFSET = 0;
-    
+
     // 要处理COUNT个文件
     public static final int COUNT = 2000;
 
+    public static final int DEAL_MODE = ExcelDealMode.COVER;
+
     public static void main(String[] args) {
         // 调用包内方法
-        ExcelDealer.deal(CONFIG_PATH, COUNT, OFFSET);
+        ExcelDealer.deal(CONFIG_PATH, COUNT, OFFSET,DEAL_MODE);
     }
 }
 ```
@@ -97,7 +98,7 @@ public class Main {
 答：本工具没实现，可自行实现。
 
 #### 问3：配置文件里面的属性都是什么意思啊？
-答：详见[Json文件解释]()，若仍有疑问，可提出[issue]()。
+答：详见[Json文件解释](https://github.com/Iceberry-qdd/ReadFormExcel#Json文件解释)，若仍有疑问，可提出[issue](https://github.com/Iceberry-qdd/ReadFormExcel/issues)。
 
 #### 问4：数据量大的时候会导致OOM崩溃吗？
 答：单个sheet内容太大时，可能会出现，但本人没测试过；本工具处理的逻辑是处理一个文件时，读取文件中所有内容后进行处理，处理完一个Excel文件后关闭文件流；处理多个Excel文件时会不断打开、关闭文件流。
@@ -107,3 +108,13 @@ public class Main {
 
 #### 问6：输出形式只能是输出到单个Excel表吗？我需要输出数据库（或直接打印在控制台，或其他途径）？
 答：目前只能输出到Excel文件中，可自行修改实现其它输出途径。
+
+### Json文件解释
+
+* `sheetNo`：待处理的Excel工作簿文件中工作表的序号。若没有为sheet重命名，则sheet1对应的sheetNo为0.
+* `workbookPaths`：待处理的Excel文件列表，需要传递文件的绝对路径，可以`.xls`与`.xlsx`两种格式混杂。
+* `workbookBatchRootPath`：文件太多，无法在`workbookPaths`属性中一一列出，则可以使用该属性传递待处理的文件们的文件夹根路径，程序自动根据后缀名选取所有所有Excel文件。
+* `workbookBatchPathRegex`：搭配`workbookBatchRootPath`属性使用，定义需要过滤掉文件的正则表达式规则，注意与之匹配的文件会被略去。
+* `outputPath`：定义处理结果文件保存在哪里，文件后缀名以`.xlsx`结尾。
+* `headLocs`：标题们（在上述处理结果文件中表现为第一行内容）在原始Excel中所在的单元格列表。
+* `bodyLocs`：内容们（在上述处理结果文件中表现为第二行内容）在原始Excel中所在的单元格列表，需与`headLocs`属性一一对应。

@@ -18,7 +18,7 @@ import java.nio.file.Paths;
  */
 class ConfigurationParser {
     private static final Gson gson = new Gson();
-    private static final Logger logger= LoggerFactory.getLogger(ConfigurationParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationParser.class);
 
     /**
      * 默认的编码格式为UTF-8
@@ -44,6 +44,8 @@ class ConfigurationParser {
      */
     protected static Configuration parse(String filePath, Charset charset) {
         Configuration config = new Configuration();
+
+
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(filePath), charset)) {
             String lineStr;
             StringBuilder sb = new StringBuilder();
@@ -52,7 +54,7 @@ class ConfigurationParser {
             }
             config = gson.fromJson(sb.toString(), Configuration.class);
         } catch (IOException e) {
-            logger.error("在指定路径没有发现配置文件：{}",filePath);
+            logger.error("在指定路径没有发现配置文件：{}", filePath);
             e.printStackTrace();
         }
         return config;
