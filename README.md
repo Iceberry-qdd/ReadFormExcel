@@ -44,7 +44,11 @@
 #### 1. 导入依赖
 
 ```xml
-<dependenies></dependenies>
+<dependency>
+    <groupId>com.iceberry</groupId>
+    <artifactId>readformexcel</artifactId>
+    <version>2.2.2</version>
+</dependency>
 ```
 
 #### 2. 定义配置文件
@@ -98,7 +102,7 @@ public class Main {
 答：本工具没实现，可自行实现。
 
 #### 问3：配置文件里面的属性都是什么意思啊？
-答：详见[Json文件解释](https://github.com/Iceberry-qdd/ReadFormExcel#Json文件解释)，若仍有疑问，可提出[issue](https://github.com/Iceberry-qdd/ReadFormExcel/issues)。
+答：详见[Json文件解释](https://github.com/Iceberry-qdd/ReadFormExcel#Json%E6%96%87%E4%BB%B6%E8%A7%A3%E9%87%8A)，若仍有疑问，可提出[issue](https://github.com/Iceberry-qdd/ReadFormExcel/issues)。
 
 #### 问4：数据量大的时候会导致OOM崩溃吗？
 答：单个sheet内容太大时，可能会出现，但本人没测试过；本工具处理的逻辑是处理一个文件时，读取文件中所有内容后进行处理，处理完一个Excel文件后关闭文件流；处理多个Excel文件时会不断打开、关闭文件流。
